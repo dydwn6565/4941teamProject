@@ -128,40 +128,11 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/post/medicalStaff", (req, res) => {
-  let body = "";
-  // console.log(req.body);
-  // let stDate = new Date(req.body.startDate);
-  // let edDate = new Date(req.body.endDate);
-  // console.log(stDate.getHours());
-  // console.log(stDate.getUTCHours());
-  // let combineStartHourAndMin =
-  //   stDate.getUTCFullYear() +
-  //   "-" +
-  //   (stDate.getUTCMonth() + 1) +
-  //   "-" +
-  //   stDate.getUTCDate() +
-  //   " " +
-  //   (stDate.getUTCHours() - 7).toString() +
-  //   ":" +
-  //   stDate.getUTCMinutes().toString();
-
-  // let combineEndHourAndMin =
-  //   edDate.getUTCFullYear() +
-  //   "-" +
-  //   (edDate.getUTCMonth() + 1) +
-  //   "-" +
-  //   edDate.getUTCDate() +
-  //   " " +
-  //   (edDate.getUTCHours() - 7).toString() +
-  //   ":" +
-  //   edDate.getUTCMinutes().toString();
-  // console.log(combineEndHourAndMin);
-  // console.log(combineStartHourAndMin);
-
+  console.log(req.body);
   let checkDupStart = `Select count(*) from medicalstaff where (name="${
     req.body.name
   }" and position="${req.body.position}" and  "${
-    req.body.startDate + " " + req.body.startTime
+    req.body.startTime
   }" Between start_at And end_at) or (name="${req.body.name}" and position="${
     req.body.position
   }" and  "${
@@ -169,21 +140,19 @@ app.post("/post/medicalStaff", (req, res) => {
   }" Between start_at And end_at) or  (name = "${
     req.body.name
   }" and position="${req.body.position}" and  start_at Between "${
-    req.body.startDate + " " + req.body.startTime
+    req.body.startTime
   }" and "${req.body.endDate + " " + req.body.endTime}") `;
 
-  let inSertMedicalStaff = `INSERT INTO medicalstaff(name,position,start_at,end_at) values("${
+  let inSertMedicalStaff = `INSERT INTO medicalstaff(name,position,start_at,end_at,patientID) values("${
     req.body.name
-  }","${req.body.position}","${
-    req.body.startDate + " " + req.body.startTime
-  }","${req.body.endDate + " " + req.body.endTime}")`;
+  }","${req.body.position}","${req.body.startTime}","${
+    req.body.endDate + " " + req.body.endTime
+  }",${req.body.patientID})`;
   db.promise(checkDupStart, (err, result) => {
     if (err) {
       throw err;
     }
   }).then((result) => {
-    console.log(result.length);
-    console.log("inside 165");
     if (result[0]["count(*)"] > 0) {
       res.send("can not set this time");
     } else {
@@ -202,38 +171,12 @@ app.post("/post/medicalStaff", (req, res) => {
 app.get("/get/medicalStaff", (req, res) => {
   db.query("SELECT * FROM medicalstaff", (err, result) => {
     if (err) throw err;
-    // console.log(result);
+
     res.send(result);
   });
 });
 
 app.put("/put/medicalStaff", (req, res) => {
-  // console.log(req.body);
-  // let stDate = new Date(req.body.startDate);
-  // let edDate = new Date(req.body.endDate);
-
-  // let combineStartHourAndMin =
-  //   stDate.getUTCFullYear() +
-  //   "-" +
-  //   (stDate.getUTCMonth() + 1) +
-  //   "-" +
-  //   stDate.getUTCDate() +
-  //   " " +
-  //   (stDate.getUTCHours() - 7).toString() +
-  //   ":" +
-  //   stDate.getUTCMinutes().toString();
-
-  // let combineEndHourAndMin =
-  //   edDate.getUTCFullYear() +
-  //   "-" +
-  //   (edDate.getUTCMonth() + 1) +
-  //   "-" +
-  //   edDate.getUTCDate() +
-  //   " " +
-  //   (edDate.getUTCHours() - 7).toString() +
-  //   ":" +
-  //   edDate.getUTCMinutes().toString();
-
   let checkDupStart = `Select count(*) from medicalstaff where (name = "${
     req.body.name
   }" and position="${req.body.position}" and "${
@@ -287,7 +230,7 @@ app.delete("/delete/medicalStaff", (req, res) => {
       throw err;
     }
   }).then((result) => {
-    console.log("inside");
+    console.log("inside delete");
     db.query(reSetNum),
       (err, result) => {
         if (err) {
@@ -365,6 +308,38 @@ app.delete("/deletePatient/:ID", (req, res) => {
   });
 });
 
+app.put("/updateReserved", (req, res) => {
+  const patientID = req.body.patientID;
+  console.log("line 336" + patientID);
+  db.query(
+    "UPDATE patient SET reservedState = 1 WHERE ID = ?",
+    [patientID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+app.put("/updateNotReserved", (req, res) => {
+  const patientID = req.body.patientID;
+  console.log("line330");
+  console.log("line 330 " + patientId);
+  db.query(
+    "UPDATE patient SET reservedState = 0 WHERE ID = ?",
+    [patientID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
 app.listen(8001, (req, res) => {
   console.log("Server running...");
 });

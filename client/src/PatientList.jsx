@@ -8,6 +8,7 @@ function PatientList() {
   const [gender, setGender] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
+
   const [patientList, setPatientList] = useState([]);
   const [newName, setNewName] = useState("");
   const [newCity, setNewCity] = useState("");
