@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Dropdown, Button } from "react-bootstrap";
+import { Dropdown, Button } from "react-bootstrap";
 import Axios from "axios";
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -123,13 +123,14 @@ function MedicalStaff() {
 
   return (
     <>
-      <div class="d-flex justify-content-center">
-        <div className="signup">
-          <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center p-5">
+        <div className="createScehdule  ">
+          <div class="d-flex justify-content-center ">
             <h3>Create Schedule</h3>
           </div>
-          <form>
-            <div class="from-row">
+
+          <form class="d-flex justify-content-center">
+            <div class="form-row w-50">
               <div class="form-group col-md-6">
                 <label for="inputName4">Name</label>
                 <input
@@ -159,10 +160,7 @@ function MedicalStaff() {
                 <Dropdown>
                   <span>Select patient: </span>
 
-                  <Dropdown.Toggle
-                    variant="secondary btn-sm"
-                    id="dropdown-basic"
-                  >
+                  <Dropdown.Toggle variant="success btn-sm" id="dropdown-basic">
                     Patient Id
                   </Dropdown.Toggle>
                   <br />
@@ -214,15 +212,7 @@ function MedicalStaff() {
                   }}
                 />
               </div>
-              {/* <div class="form-group col-md-6">
-                <label for="inputName4">Start Date:</label>
-                <input
-                  type="time"
-                  onChange={(e) => {
-                    setEndTime(e.target.value);
-                  }}
-                />
-              </div> */}
+
               <div class="form-group col-md-6">
                 <label for="inputName4">Update Number:</label>
                 <input
@@ -235,121 +225,68 @@ function MedicalStaff() {
               </div>
             </div>
           </form>
-          {/* <label>Name: </label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
-          /> */}
-          {/* <br /> */}
-          {/* <label>Position: </label>
-          <input
-            type="text"
-            onChange={(e) => {
-              setPosition(e.target.value);
-            }} */}
-          {/* /> */}
-          {/* <br /> */}
 
-          {/* <Dropdown>
-            <span>Select patient: </span>
-            <Dropdown.Toggle
-              variant="secondary btn-sm"
-              id="dropdown-basic"
-            ></Dropdown.Toggle>
-            <br />
-
-            <Dropdown.Menu variant="secondary btn-sm" id="dropdown-basic">
-              {patientList &&
-                patientList.map((patient) => (
-                  <Dropdown.Item
-                    key={patientList.ID}
-                    onClick={(e) => {
-                      setselectedPatient(patient.date);
-                      setStartTime(patient.date);
-                      setPatientId(patient.ID);
-                      setPatientState(patient.reservedState);
-                    }}
-                  >
-                    {" "}
-                    {patient.ID}
-                    <p>
-                      {patient.reservedState === 1 ? (
-                        <p>Reserved</p>
-                      ) : (
-                        <p>Not Reserved</p>
-                      )}
-                    </p>
-                  </Dropdown.Item>
-                ))}
-            </Dropdown.Menu>
-          </Dropdown> */}
-
-          {/* <span>Start Date: </span>
-          {selectedPatient} */}
-          {/* <span>End Date: </span>
-          <input
-            type="date"
-            onChange={(e) => {
-              setEndDate(e.target.value);
-            }}
-          />
-          <input
-            type="time"
-            onChange={(e) => {
-              setEndTime(e.target.value);
-            }}
-          />
-          <br /> */}
-          {/* <span>
-            Please type the number if you want to update or delete schedule
-            Update Number:
-          </span> */}
-          {/* <input
-            type="text"
-            onChange={(e) => {
-              setUpdateNum(e.target.value);
-            }}
-          /> */}
           <br />
           <br />
-          <Button onClick={RegisterRequest}>Register doctor schedule</Button>
-          <Button class="btn btn-secondary bm-3" onClick={UpdateMedicalStaff}>
-            update doctor schedule
-          </Button>
-          <Button class="btn btn-success" onClick={GetMedicalStaff}>
-            get doctor schedule
-          </Button>
-          <Button class="btn btn-info" onClick={DeleteMedicalStaff}>
-            delete doctor schedule
-          </Button>
+          <div class="d-flex justify-content-center">
+            <Button class="btn btn-primary btn-sm " onClick={RegisterRequest}>
+              Register Schedule
+            </Button>
+            <Button
+              class="btn btn-secondary btn-sm "
+              onClick={UpdateMedicalStaff}
+            >
+              Update Schedule
+            </Button>
+            <Button class="btn btn-success btn-sm " onClick={GetMedicalStaff}>
+              Get Schedule
+            </Button>
+            <Button class="btn btn-info btn-sm " onClick={DeleteMedicalStaff}>
+              Delete Schedule
+            </Button>
+          </div>
         </div>
       </div>
       <div className="d-flex justify-content-center">
         <div className="schedule">
           <div>{list.position}</div>
-          <h3>Schedule list</h3>
-          <Row>
-            <Col>Number</Col>
-            <Col>Name</Col>
-            <Col>Position</Col>
-            <Col>Start Date</Col>
-            <Col>End Date</Col>
-            <Col>Patient Id</Col>
-          </Row>
-          {list.map((li) => (
-            <>
-              <Row>
-                <Col>{li.Id}</Col>
-                <Col>{li.name}</Col>
-                <Col>{li.position}</Col>
-                <Col>{li.start_at}</Col>
-                <Col>{li.end_at}</Col>
-                <Col>{li.patientID}</Col>
-              </Row>
-            </>
-          ))}
+          <div className="d-flex justify-content-center">
+            <h3>Schedule list</h3>
+          </div>
+          {/* <Row> */}
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">NO</th>
+                <th scope="col">Name</th>
+                <th scope="col" style={{ textAlign: "center" }}>
+                  Po
+                </th>
+                <th scope="col" style={{ textAlign: "center" }}>
+                  ST Date
+                </th>
+                <th scope="col" style={{ textAlign: "center" }}>
+                  Ed Date
+                </th>
+                <th scope="col"># Patient</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {list.map((li) => (
+                <>
+                  <tr>
+                    <td>{li.Id}</td>
+                    <td>{li.name}</td>
+                    <td>{li.position}</td>
+                    <td>{li.start_at}</td>
+                    <td>{li.end_at}</td>
+                    <td style={{ textAlign: "center" }}>{li.patientID}</td>
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
     </>
