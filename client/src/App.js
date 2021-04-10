@@ -11,15 +11,15 @@ import PatientList from "./PatientList";
 function App() {
   Axios.defaults.withCredentials = true;
 
-  const userAuthenticated = () => {
-    Axios.get("http://localhost:8001/authUser", {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((response) => {
-      console.log(response);
-    });
-  };
+  // const userAuthenticated = () => {
+  //   Axios.get("http://localhost:8001/authUser", {
+  //     headers: {
+  //       "x-access-token": localStorage.getItem("token"),
+  //     },
+  //   }).then((response) => {
+  //     console.log(response);
+  //   });
+  // };
 
   return (
     <>
