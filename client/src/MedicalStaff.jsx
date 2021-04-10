@@ -315,9 +315,15 @@ function MedicalStaff() {
           <br />
           <br />
           <Button onClick={RegisterRequest}>Register doctor schedule</Button>
-          <Button onClick={UpdateMedicalStaff}>update doctor schedule</Button>
-          <Button onClick={GetMedicalStaff}>get doctor schedule</Button>
-          <Button onClick={DeleteMedicalStaff}>delete doctor schedule</Button>
+          <Button class="btn btn-secondary bm-3" onClick={UpdateMedicalStaff}>
+            update doctor schedule
+          </Button>
+          <Button class="btn btn-success" onClick={GetMedicalStaff}>
+            get doctor schedule
+          </Button>
+          <Button class="btn btn-info" onClick={DeleteMedicalStaff}>
+            delete doctor schedule
+          </Button>
         </div>
       </div>
       <div className="d-flex justify-content-center">
