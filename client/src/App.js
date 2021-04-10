@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Axios from "axios";
 import "./App.css";
 import { BrowserRouter as Router, Route } from "react-router-dom";
@@ -11,15 +11,15 @@ import PatientList from "./PatientList";
 function App() {
   Axios.defaults.withCredentials = true;
 
-  const userAuthenticated = () => {
-    Axios.get("http://localhost:8001/authUser", {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((response) => {
-      console.log(response);
-    });
-  };
+  // const userAuthenticated = () => {
+  //   Axios.get("http://localhost:8001/authUser", {
+  //     headers: {
+  //       "x-access-token": localStorage.getItem("token"),
+  //     },
+  //   }).then((response) => {
+  //     console.log(response);
+  //   });
+  // };
 
   return (
     <>

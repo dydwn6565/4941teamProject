@@ -1,6 +1,6 @@
 import React from "react";
-import { Jumbotron, Button, Row, Container } from "react-bootstrap";
-import { LinkContainer, Link } from "react-router-dom";
+import { Jumbotron, Row, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 function Home() {
   return (
     <div>
