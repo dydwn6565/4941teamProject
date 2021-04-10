@@ -233,15 +233,15 @@ function MedicalStaff() {
               Register Schedule
             </Button>
             <Button
-              class="btn btn-secondary btn-sm"
+              class="btn btn-secondary btn-sm "
               onClick={UpdateMedicalStaff}
             >
               Update Schedule
             </Button>
-            <Button class="btn btn-success btn-sm" onClick={GetMedicalStaff}>
+            <Button class="btn btn-success btn-sm " onClick={GetMedicalStaff}>
               Get Schedule
             </Button>
-            <Button class="btn btn-info btn-sm" onClick={DeleteMedicalStaff}>
+            <Button class="btn btn-info btn-sm " onClick={DeleteMedicalStaff}>
               Delete Schedule
             </Button>
           </div>
