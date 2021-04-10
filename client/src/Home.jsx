@@ -1,32 +1,12 @@
 import React from "react";
 import { Jumbotron, Row, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import Header from "./Header";
 import "./css/Home.css";
-import { Navbar, Nav } from "react-bootstrap";
 
 function Home() {
   return (
-    <div>
-      <Navbar bg="dark" variant="dark">
-        <Navbar.Brand>Home</Navbar.Brand>
-        <Nav className="mr-auto">
-          <Nav.Link>
-            <Link to="/PatientList">Patient list</Link>
-          </Nav.Link>
-
-          <Nav.Link>
-            <Link to="/MedicalStaff">Medical staff</Link>
-          </Nav.Link>
-
-          <Nav.Link>
-            <Link to="/LogIn">Login</Link>
-          </Nav.Link>
-
-          <Nav.Link>
-            <Link to="/Register">Register</Link>
-          </Nav.Link>
-        </Nav>
-      </Navbar>
+    <>
+      <Header />
       <Container>
         <Jumbotron className="mt-5">
           <h1>Appoinment management system</h1>
@@ -41,7 +21,7 @@ function Home() {
           </Row>
         </Jumbotron>
       </Container>
-    </div>
+    </>
   );
 }
 

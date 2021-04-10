@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import "./css/PatientList.css";
-import Axios from "axios";
 import { Form } from "react-bootstrap";
+import Axios from "axios";
+import Header from "./Header";
+import "./css/PatientList.css";
 
 function PatientList() {
   const [name, setName] = useState("");
@@ -111,6 +112,7 @@ function PatientList() {
 
   return (
     <>
+      <Header />
       <div className="patientlist">
         <h3>Patient List</h3>
         <h5>Please add the patient</h5>
