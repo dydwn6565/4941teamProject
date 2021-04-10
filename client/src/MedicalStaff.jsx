@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "react-bootstrap";
 import Axios from "axios";
-
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import Header from "./Header";
 import "./App.css";
 
 function MedicalStaff() {
@@ -62,6 +61,9 @@ function MedicalStaff() {
           console.log(response);
         });
       });
+
+      window.location.reload(false);
+      GetMedicalStaff();
     }
   };
 
@@ -84,6 +86,7 @@ function MedicalStaff() {
       }).then((response) => {
         console.log(response);
       });
+      // GetMedicalStaff()
     }
   };
 
@@ -122,174 +125,177 @@ function MedicalStaff() {
   };
 
   return (
-    <>
-      <div class="d-flex justify-content-center p-5">
-        <div className="createScehdule  ">
-          <div class="d-flex justify-content-center ">
-            <h3>Create Schedule</h3>
-          </div>
-
-          <form class="d-flex justify-content-center">
-            <div class="form-row w-50">
-              <div class="form-group col-md-6">
-                <label for="inputName4">Name</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputName4"
-                  placeholder="name"
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputPosition4">Position</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="inputPosition4"
-                  placeholder="name"
-                  onChange={(e) => {
-                    setPosition(e.target.value);
-                  }}
-                />
-              </div>
-              <div class="form-group col-md-6">
-                {/* <label for="inputPosition4">Select Patient</label> */}
-                <Dropdown>
-                  <span>Select patient: </span>
-
-                  <Dropdown.Toggle variant="success btn-sm" id="dropdown-basic">
-                    Patient Id
-                  </Dropdown.Toggle>
-                  <br />
-
-                  <Dropdown.Menu variant="secondary btn-sm" id="dropdown-basic">
-                    {patientList &&
-                      patientList.map((patient) => (
-                        <Dropdown.Item
-                          key={patientList.ID}
-                          onClick={(e) => {
-                            setselectedPatient(patient.date);
-                            setStartTime(patient.date);
-                            setPatientId(patient.ID);
-                            setPatientState(patient.reservedState);
-                          }}
-                        >
-                          {" "}
-                          Patient#: {patient.ID}
-                          <p>
-                            {patient.reservedState === 1 ? (
-                              <p>Reserved</p>
-                            ) : (
-                              <p>Not Reserved</p>
-                            )}
-                          </p>
-                        </Dropdown.Item>
-                      ))}
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputName4">Start Date:</label>
-                {selectedPatient}
-              </div>
-              <div class="form-group col-md-6">
-                <label for="inputName4">End Date: </label>
-                <input
-                  type="date"
-                  class="form-control"
-                  onChange={(e) => {
-                    setEndDate(e.target.value);
-                  }}
-                />
-                <input
-                  type="time"
-                  class="form-control"
-                  onChange={(e) => {
-                    setEndTime(e.target.value);
-                  }}
-                />
+    <div>
+      {localStorage.getItem("token") ? (
+        <>
+          <Header />
+          <div className="d-flex justify-content-center p-5">
+            <div className="createScehdule">
+              <div className="d-flex justify-content-center ">
+                <h3>Create Schedule</h3>
               </div>
 
-              <div class="form-group col-md-6">
-                <label for="inputName4">Update Number:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  onChange={(e) => {
-                    setUpdateNum(e.target.value);
-                  }}
-                />
+              <form className="d-flex justify-content-center">
+                <div className="form-row w-50 mx-3">
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputName4">Staff Name</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="inputName4"
+                      placeholder="name"
+                      onChange={(e) => {
+                        setName(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputPosition4">Position</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="inputPosition4"
+                      placeholder="position"
+                      onChange={(e) => {
+                        setPosition(e.target.value);
+                      }}
+                    />
+                  </div>
+                  <div className="form-group col-md-6">
+                    {/* <label htmlFor="inputPosition4">Select Patient</label> */}
+                    <Dropdown>
+                      <span>Select patient: </span>
+
+                      <Dropdown.Toggle variant="success btn-sm" id="dropdown-basic">
+                        Patient Id
+                      </Dropdown.Toggle>
+                      <br />
+
+                      <Dropdown.Menu variant="secondary btn-sm" id="dropdown-basic">
+                        {patientList &&
+                          patientList.map((patient, index) => (
+                            <Dropdown.Item
+                              key={index}
+                              onClick={(e) => {
+                                setselectedPatient(patient.date);
+                                setStartTime(patient.date);
+                                setPatientId(patient.ID);
+                                setPatientState(patient.reservedState);
+                              }}
+                            >
+                              {" "}
+                              Patient#: {patient.ID}
+                              <span>
+                                {patient.reservedState === 1 ? (
+                                  <p>Reserved</p>
+                                ) : (
+                                  <p>Not Reserved</p>
+                                )}
+                              </span>
+                            </Dropdown.Item>
+                          ))}
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputName4">Start Date:</label>
+                    {selectedPatient}
+                  </div>
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputName4">End Date: </label>
+                    <input
+                      type="date"
+                      className="form-control"
+                      onChange={(e) => {
+                        setEndDate(e.target.value);
+                      }}
+                    />
+                    <input
+                      type="time"
+                      className="form-control"
+                      onChange={(e) => {
+                        setEndTime(e.target.value);
+                      }}
+                    />
+                  </div>
+
+                  <div className="form-group col-md-6">
+                    <label htmlFor="inputName4">Update Number:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      onChange={(e) => {
+                        setUpdateNum(e.target.value);
+                      }}
+                    />
+                  </div>
+                </div>
+              </form>
+
+              <br />
+              <br />
+              <div className="d-flex justify-content-center">
+                <Button className="btn btn-success btn-sm mr-3" onClick={GetMedicalStaff}>
+                  View Schedule
+                </Button>
+                <Button className="btn btn-primary btn-sm mr-3" onClick={RegisterRequest}>
+                  Add Schedule
+                </Button>
+                <Button className="btn btn-secondary btn-sm mr-3" onClick={UpdateMedicalStaff}>
+                  Update Schedule
+                </Button>
+                <Button className="btn btn-info btn-sm mr-3" onClick={DeleteMedicalStaff}>
+                  Delete Schedule
+                </Button>
               </div>
             </div>
-          </form>
-
-          <br />
-          <br />
-          <div class="d-flex justify-content-center">
-            <Button class="btn btn-primary btn-sm " onClick={RegisterRequest}>
-              Register Schedule
-            </Button>
-            <Button
-              class="btn btn-secondary btn-sm "
-              onClick={UpdateMedicalStaff}
-            >
-              Update Schedule
-            </Button>
-            <Button class="btn btn-success btn-sm " onClick={GetMedicalStaff}>
-              Get Schedule
-            </Button>
-            <Button class="btn btn-info btn-sm " onClick={DeleteMedicalStaff}>
-              Delete Schedule
-            </Button>
           </div>
-        </div>
-      </div>
-      <div className="d-flex justify-content-center">
-        <div className="schedule">
-          <div>{list.position}</div>
           <div className="d-flex justify-content-center">
-            <h3>Schedule list</h3>
-          </div>
-          {/* <Row> */}
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">NO</th>
-                <th scope="col">Name</th>
-                <th scope="col" style={{ textAlign: "center" }}>
-                  Po
-                </th>
-                <th scope="col" style={{ textAlign: "center" }}>
-                  ST Date
-                </th>
-                <th scope="col" style={{ textAlign: "center" }}>
-                  Ed Date
-                </th>
-                <th scope="col"># Patient</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {list.map((li) => (
-                <>
+            <div className="schedule">
+              <div>{list.position}</div>
+              <div className="d-flex justify-content-center">
+                <h3>Schedule list</h3>
+              </div>
+              <table className="table">
+                <thead>
                   <tr>
-                    <td>{li.Id}</td>
-                    <td>{li.name}</td>
-                    <td>{li.position}</td>
-                    <td>{li.start_at}</td>
-                    <td>{li.end_at}</td>
-                    <td style={{ textAlign: "center" }}>{li.patientID}</td>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col" style={{ textAlign: "center" }}>
+                      Po
+                    </th>
+                    <th scope="col" style={{ textAlign: "center" }}>
+                      ST Date
+                    </th>
+                    <th scope="col" style={{ textAlign: "center" }}>
+                      Ed Date
+                    </th>
+                    <th scope="col"># Patient</th>
                   </tr>
-                </>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
+                </thead>
+
+                <tbody>
+                  {list.map((li) => (
+                    <>
+                      <tr>
+                        <td>{li.Id}</td>
+                        <td>{li.name}</td>
+                        <td>{li.position}</td>
+                        <td>{li.start_at}</td>
+                        <td>{li.end_at}</td>
+                        <td style={{ textAlign: "center" }}>{li.patientID}</td>
+                      </tr>
+                    </>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+      ) : (
+        (window.location.href = "/")
+      )}
+    </div>
   );
 }
 

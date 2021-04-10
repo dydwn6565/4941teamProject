@@ -317,7 +317,7 @@ app.put("/updateReserved", (req, res) => {
 app.put("/updateNotReserved", (req, res) => {
   const patientID = req.body.patientID;
   console.log("line330");
-  console.log("line 330 " + patientId);
+  console.log("line 330 " + patientID);
   db.query("UPDATE patient SET reservedState = 0 WHERE ID = ?", [patientID], (err, result) => {
     if (err) {
       console.log(err);
