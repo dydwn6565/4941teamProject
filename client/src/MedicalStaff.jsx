@@ -122,7 +122,7 @@ function MedicalStaff() {
 
   return (
     <>
-      <div className="signup">
+      <div className="createSchedule">
         <h3>Create Schedule</h3>
         <label>Name: </label>
         <input
@@ -142,10 +142,7 @@ function MedicalStaff() {
 
         <Dropdown>
           <span>Select patient: </span>
-          <Dropdown.Toggle
-            variant="secondary btn-sm"
-            id="dropdown-basic"
-          ></Dropdown.Toggle>
+          <Dropdown.Toggle variant="secondary btn-sm" id="dropdown-basic"></Dropdown.Toggle>
           <br />
           <span>Start Date: </span>
           <Dropdown.Menu variant="secondary btn-sm" id="dropdown-basic">
@@ -162,13 +159,7 @@ function MedicalStaff() {
                 >
                   {" "}
                   {patient.ID}
-                  <p>
-                    {patient.reservedState === 1 ? (
-                      <p>Reserved</p>
-                    ) : (
-                      <p>Not Reserved</p>
-                    )}
-                  </p>
+                  <p>{patient.reservedState === 1 ? <p>Reserved</p> : <p>Not Reserved</p>}</p>
                 </Dropdown.Item>
               ))}
           </Dropdown.Menu>
