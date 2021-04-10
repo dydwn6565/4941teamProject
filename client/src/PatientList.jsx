@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import "./PatientList.css";
+import "./css/PatientList.css";
 import Axios from "axios";
+import { Form } from "react-bootstrap";
+
 function PatientList() {
   const [name, setName] = useState("");
   const [city, setCity] = useState("");
@@ -16,6 +18,7 @@ function PatientList() {
   const [newGender, setNewGender] = useState("");
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
+
   const getPatient = () => {
     Axios.get("http://localhost:8001/patientList").then((response) => {
       setPatientList(response.data);
@@ -23,182 +26,222 @@ function PatientList() {
   };
 
   const addPatient = () => {
-    Axios.post("http://localhost:8001/createPatient", {
-      name: name,
-      city: city,
-      mobile: mobile,
-      gender: gender,
-      date: date,
-      time: time,
-    }).then(() => {
-      setPatientList([
-        ...patientList,
-        {
-          name: name,
-          city: city,
-          mobile: mobile,
-          gender: gender,
-          date: date,
-          time: time,
-        },
-      ]);
-    });
+    if (
+      name === "" ||
+      city === "" ||
+      mobile === "" ||
+      gender === "" ||
+      date === "" ||
+      time === ""
+    ) {
+      alert("Please fill in!");
+    } else {
+      Axios.post("http://localhost:8001/createPatient", {
+        name: name,
+        city: city,
+        mobile: mobile,
+        gender: gender,
+        date: date,
+        time: time,
+      }).then(() => {
+        setPatientList([
+          ...patientList,
+          {
+            name: name,
+            city: city,
+            mobile: mobile,
+            gender: gender,
+            date: date,
+            time: time,
+          },
+        ]);
+      });
+    }
   };
 
   const editPatientName = (ID) => {
-    Axios.put("http://localhost:8001/updatePatient", {
-      name: newName,
-      city: newCity,
-      mobile: newMobile,
-      gender: newGender,
-      date: newDate,
-      time: newTime,
-      ID: ID,
-    }).then((response) => {
-      console.log(`line 68: ${time}`);
+    if (
+      newName === "" ||
+      newCity === "" ||
+      newMobile === "" ||
+      newGender === "" ||
+      newDate === "" ||
+      newTime === ""
+    ) {
+      alert("Please fill in!");
+    } else {
+      Axios.put("http://localhost:8001/updatePatient", {
+        name: newName,
+        city: newCity,
+        mobile: newMobile,
+        gender: newGender,
+        date: newDate,
+        time: newTime,
+        ID: ID,
+      }).then((response) => {
+        console.log(`line 68: ${time}`);
+        setPatientList(
+          patientList.map((val) => {
+            return val.ID === ID
+              ? {
+                  ID: val.ID,
+                  name: newName,
+                  city: newCity,
+                  mobile: newMobile,
+                  gender: newGender,
+                  date: newDate,
+                  time: newTime,
+                }
+              : val;
+          })
+        );
+      });
+    }
+  };
+
+  const removePatient = (ID) => {
+    Axios.delete(`http://localhost:8001/deletePatient/${ID}`).then((response) => {
       setPatientList(
-        patientList.map((val) => {
-          return val.ID === ID
-            ? {
-                ID: val.ID,
-                name: newName,
-                city: newCity,
-                mobile: newMobile,
-                gender: newGender,
-                date: newDate,
-                time: newTime,
-              }
-            : val;
+        patientList.filter((val) => {
+          return val.ID !== ID;
         })
       );
     });
   };
 
-  const removePatient = (ID) => {
-    Axios.delete(`http://localhost:8001/deletePatient/${ID}`).then(
-      (response) => {
-        setPatientList(
-          patientList.filter((val) => {
-            return val.ID !== ID;
-          })
-        );
-      }
-    );
-  };
-
   return (
-    <div className="patientlist">
-      <label>Name:</label>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => {
-          setName(e.target.value);
-        }}
-      />
-      <label>City:</label>
-      <input
-        type="text"
-        value={city}
-        onChange={(e) => {
-          setCity(e.target.value);
-        }}
-      />
-      <label>Mobile:</label>
-      <input
-        type="text"
-        value={mobile}
-        onChange={(e) => {
-          setMobile(e.target.value);
-        }}
-      />
-      <label>Gender:</label>
-      <input
-        type="text"
-        value={gender}
-        onChange={(e) => {
-          setGender(e.target.value);
-        }}
-      />
-      <label>Date:</label>
-      <input
-        type="date"
-        value={date}
-        onChange={(e) => {
-          setDate(e.target.value);
-        }}
-      />
-      <input
-        type="time"
-        value={time}
-        onChange={(e) => {
-          setTime(e.target.value);
-        }}
-      />
-      <button onClick={addPatient}>Add Client</button>
-      <br />
-      <div className="allPatient">
-        <button onClick={getPatient}>Show all patient</button>
-        {patientList.map((val, key) => {
-          return (
-            <div className="patient" key={val.ID}>
-              <div>
-                <h3>Name: {val.name}</h3>
-                <h3>City: {val.city}</h3>
-                <h3>Mobile: {val.mobile}</h3>
-                <h3>Gender: {val.gender}</h3>
-                <h3>
-                  Reservation date: {val.date} {val.time}
-                </h3>
-              </div>
-              <div>
-                Name:
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setNewName(e.target.value);
-                  }}
-                />
-                <br />
-                City:
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setNewCity(e.target.value);
-                  }}
-                />
-                <br />
-                Mobile:
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setNewMobile(e.target.value);
-                  }}
-                />
-                <br />
-                Gender:
-                <input
-                  type="text"
-                  onChange={(e) => {
-                    setNewGender(e.target.value);
-                  }}
-                />
-                <br />
-                Reservation date:
-                <input
-                  type="date"
-                  onChange={(e) => {
-                    setNewDate(e.target.value);
-                  }}
-                />
-                <br />
-                <input
-                  type="time"
-                  onChange={(e) => {
-                    setNewTime(e.target.value);
-                  }}
-                />
-                <br />
+    <>
+      <div className="patientlist">
+        <h3>Patient List</h3>
+        <h5>Please add the patient</h5>
+        <div className="inputForm">
+          <label>Name</label>
+          <Form.Control
+            required
+            type="text"
+            value={name}
+            onChange={(e) => {
+              setName(e.target.value);
+            }}
+          />
+          <label>City</label>
+          <Form.Control
+            required
+            type="text"
+            value={city}
+            onChange={(e) => {
+              setCity(e.target.value);
+            }}
+          />
+          <label>Mobile</label>
+          <Form.Control
+            required
+            type="text"
+            value={mobile}
+            onChange={(e) => {
+              setMobile(e.target.value);
+            }}
+          />
+          <label>Gender</label>
+          <Form.Control
+            required
+            type="text"
+            value={gender}
+            onChange={(e) => {
+              setGender(e.target.value);
+            }}
+          />
+          <label>Date</label>
+          <Form.Control
+            required
+            type="date"
+            value={date}
+            onChange={(e) => {
+              setDate(e.target.value);
+            }}
+          />
+          <Form.Control
+            required
+            type="time"
+            value={time}
+            onChange={(e) => {
+              setTime(e.target.value);
+            }}
+          />
+          <button id="addBtn" onClick={addPatient}>
+            Add Client
+          </button>
+        </div>
+        <br />
+        <div className="allPatient">
+          <button onClick={getPatient}>Show all patient</button>
+          {patientList.map((val, key) => {
+            return (
+              <div className="patient" key={val.ID}>
+                <div id="patientInfo">
+                  <p>Name: {val.name}</p>
+                  <p>City: {val.city}</p>
+                  <p>Mobile: {val.mobile}</p>
+                  <p>Gender: {val.gender}</p>
+                  <p>
+                    Reservation date: {val.date} {val.time}
+                  </p>
+                </div>
+                <div className="patientInfoInput">
+                  <label id="label">Name:</label>
+                  <input
+                    required
+                    type="text"
+                    onChange={(e) => {
+                      setNewName(e.target.value);
+                    }}
+                  />
+                  <br />
+                  <label id="label">City:</label>
+                  <input
+                    required
+                    type="text"
+                    onChange={(e) => {
+                      setNewCity(e.target.value);
+                    }}
+                  />
+                  <br />
+                  <label id="label">Mobile:</label>
+                  <input
+                    required
+                    type="text"
+                    onChange={(e) => {
+                      setNewMobile(e.target.value);
+                    }}
+                  />
+                  <br />
+                  <label id="label">Gender:</label>
+                  <input
+                    required
+                    type="text"
+                    onChange={(e) => {
+                      setNewGender(e.target.value);
+                    }}
+                  />
+                  <br />
+                  <label id="label">Reservation date:</label>
+                  <input
+                    required
+                    type="date"
+                    onChange={(e) => {
+                      setNewDate(e.target.value);
+                    }}
+                  />
+                  <br />
+                  <input
+                    required
+                    type="time"
+                    onChange={(e) => {
+                      setNewTime(e.target.value);
+                    }}
+                  />
+                  <br />
+                </div>
                 <button
                   onClick={() => {
                     editPatientName(val.ID);
@@ -214,11 +257,11 @@ function PatientList() {
                   Delete
                 </button>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

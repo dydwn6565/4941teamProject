@@ -33,8 +33,8 @@ app.use(
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
-  database: "4537db",
+  password: "0505",
+  database: "project",
 });
 
 db.promise = (sql) => {
@@ -56,13 +56,9 @@ app.post("/register", (req, res) => {
     if (err) {
       console.log(err);
     }
-    db.query(
-      "INSERT INTO users (email, password) VALUES (?, ?)",
-      [email, hash],
-      (err, result) => {
-        console.log(err);
-      }
-    );
+    db.query("INSERT INTO users (email, password) VALUES (?, ?)", [email, hash], (err, result) => {
+      console.log(err);
+    });
   });
 });
 
@@ -137,11 +133,11 @@ app.post("/post/medicalStaff", (req, res) => {
     req.body.position
   }" and  "${
     req.body.endDate + " " + req.body.endTime
-  }" Between start_at And end_at) or  (name = "${
-    req.body.name
-  }" and position="${req.body.position}" and  start_at Between "${
-    req.body.startTime
-  }" and "${req.body.endDate + " " + req.body.endTime}") `;
+  }" Between start_at And end_at) or  (name = "${req.body.name}" and position="${
+    req.body.position
+  }" and  start_at Between "${req.body.startTime}" and "${
+    req.body.endDate + " " + req.body.endTime
+  }") `;
 
   let inSertMedicalStaff = `INSERT INTO medicalstaff(name,position,start_at,end_at,patientID) values("${
     req.body.name
@@ -185,22 +181,20 @@ app.put("/put/medicalStaff", (req, res) => {
     req.body.position
   }" and  "${
     req.body.endDate + " " + req.body.endTime
-  }" Between start_at and end_at) or  (name = "${
-    req.body.name
-  }" and position="${req.body.position}" and  start_at Between "${
-    req.body.startDate + " " + req.body.startTime
-  }" and "${req.body.endDate + " " + req.body.endTime}") `;
+  }" Between start_at and end_at) or  (name = "${req.body.name}" and position="${
+    req.body.position
+  }" and  start_at Between "${req.body.startDate + " " + req.body.startTime}" and "${
+    req.body.endDate + " " + req.body.endTime
+  }") `;
 
   db.promise(checkDupStart, (err, result) => {
     if (err) {
       throw err;
     }
   }).then((result) => {
-    let updateMedicalStaff = `UPDATE  medicalstaff set name = "${
-      req.body.name
-    }", position ="${req.body.position}",start_at = "${
-      req.body.startDate + " " + req.body.startTime
-    }",end_at="${
+    let updateMedicalStaff = `UPDATE  medicalstaff set name = "${req.body.name}", position ="${
+      req.body.position
+    }",start_at = "${req.body.startDate + " " + req.body.startTime}",end_at="${
       req.body.endDate + " " + req.body.endTime
     }" where Id =${parseInt(req.body.updateNum)}`;
 
@@ -311,34 +305,26 @@ app.delete("/deletePatient/:ID", (req, res) => {
 app.put("/updateReserved", (req, res) => {
   const patientID = req.body.patientID;
   console.log("line 336" + patientID);
-  db.query(
-    "UPDATE patient SET reservedState = 1 WHERE ID = ?",
-    [patientID],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
+  db.query("UPDATE patient SET reservedState = 1 WHERE ID = ?", [patientID], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
     }
-  );
+  });
 });
 
 app.put("/updateNotReserved", (req, res) => {
   const patientID = req.body.patientID;
   console.log("line330");
   console.log("line 330 " + patientId);
-  db.query(
-    "UPDATE patient SET reservedState = 0 WHERE ID = ?",
-    [patientID],
-    (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
+  db.query("UPDATE patient SET reservedState = 0 WHERE ID = ?", [patientID], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
     }
-  );
+  });
 });
 app.listen(8001, (req, res) => {
   console.log("Server running...");
