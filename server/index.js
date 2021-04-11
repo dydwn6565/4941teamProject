@@ -86,11 +86,13 @@ app.get("/authUser", (req, res) => {
   const token = req.headers["x-access-token"];
   // console.log(token);
   if (!token) {
-    res.send("No token");
+    res.status(401).send("No token");
   } else {
     jwt.verify(token, "jwtSecret", (err, decoded) => {
       if (err) {
-        res.json({ auth: false, message: "Failed to authenticate.." });
+        res
+          .status(401)
+          .json({ auth: false, message: "Failed to authenticate.." });
       } else {
         req.userID = decoded.id;
         // console.log(decoded.email);
@@ -408,6 +410,23 @@ app.put("/updateNotReserved", (req, res) => {
       }
     }
   );
+});
+
+app.get("/totalServerRequest/:id", (req, res) => {
+  console.log(req.params.id);
+  console.log("line415");
+  let getUserId = `SELECT userID from users where email= "${req.params.id}"`;
+  db.promise(getUserId, (err, result) => {
+    if (err) throw err;
+  }).then((result) => {
+    console.log(result[0].userID);
+    let userID = result[0].userID;
+    let getServerRequest = `SELECT * from admin where userID=${userID}`;
+    db.query(getServerRequest, (err, result) => {
+      console.log(result[0]);
+      res.send(result[0]);
+    });
+  });
 });
 app.listen(8001, (req, res) => {
   console.log("Server running...");

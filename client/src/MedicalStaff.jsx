@@ -333,9 +333,9 @@ function MedicalStaff() {
                 </thead>
 
                 <tbody>
-                  {list.map((li) => (
+                  {list.map((li, index) => (
                     <>
-                      <tr>
+                      <tr key={index}>
                         <td>{li.Id}</td>
                         <td>{li.name}</td>
                         <td>{li.position}</td>

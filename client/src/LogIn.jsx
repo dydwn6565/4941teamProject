@@ -19,21 +19,29 @@ function LogIn() {
         email: userEmail,
         password: userPassword,
       }).then((response) => {
-        console.log(response);
-        console.log(response.message);
-        // if (response) {
-        // alert("This is invaild input");
-        localStorage.setItem("token", response.data.token);
-        getUserEmail();
-        insertUserId();
-        history.push("/");
+        // console.log(response);
+        // console.log(response.message);
+
+        if (response.data.token === undefined) {
+          alert("This is invaild input");
+        } else {
+          localStorage.setItem("token", response.data.token);
+          getUserEmail();
+
+          history.push("/");
+        }
       });
+      // if (localStorage.getItem("email") === null) {
+      //   alert("This is not valid input");
+      // } else {
+      //   // insertUserId();
+      // }
     }
   };
-  const insertUserId = () => {
+  const insertUserId = (userEmail) => {
     // console.log(userEmail)
     Axios.post("http://localhost:8001/insertUserId", {
-      userEmail: localStorage.getItem("email"),
+      userEmail: userEmail,
     }).then((response) => {
       console.log(response);
     });
@@ -50,6 +58,7 @@ function LogIn() {
       console.log(response.data);
       // setUserEmail(response.data);
       localStorage.setItem("email", response.data);
+      insertUserId(response.data);
     });
   };
 
