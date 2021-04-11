@@ -24,12 +24,33 @@ function LogIn() {
         // if (response) {
         // alert("This is invaild input");
         localStorage.setItem("token", response.data.token);
+        getUserEmail();
+        insertUserId();
         history.push("/");
-        // } else {
-
-        // }
       });
     }
+  };
+  const insertUserId = () => {
+    // console.log(userEmail)
+    Axios.post("http://localhost:8001/insertUserId", {
+      userEmail: localStorage.getItem("email"),
+    }).then((response) => {
+      console.log(response);
+    });
+  };
+
+  const getUserEmail = () => {
+    // console.log(localStorage.getItem("token"));
+
+    Axios.get("http://localhost:8001/authUser", {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((response) => {
+      console.log(response.data);
+      // setUserEmail(response.data);
+      localStorage.setItem("email", response.data);
+    });
   };
 
   return (

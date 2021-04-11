@@ -129,7 +129,7 @@ app.post("/login", (req, res) => {
           // console.log(id);
           // console.log(result[0].email);
           const token = jwt.sign({ email }, "jwtSecret", {
-            expiresIn: 300, //5mins
+            expiresIn: 3600, //5mins
           });
           req.session.user = result;
           res.json({ auth: true, token: token, result: result });
@@ -146,6 +146,7 @@ app.post("/login", (req, res) => {
 app.post("/addCountRequest", (req, res) => {
   let apiAddress = req.body.apiAddress;
   console.log(apiAddress);
+  console.log(req.body);
 
   let getUserId = `SELECT userID from users where email= "${req.body.userEmail}"`;
 
@@ -184,7 +185,7 @@ app.post("/insertUserId", (req, res) => {
     console.log("line176");
     console.log(result[0].userID);
     // console.log(result[0]["userId"]);
-    let insertUserId = `insert admin(userID) values(${result[0].userID})`;
+    let insertUserId = `insert ignore admin(userID) values(${result[0].userID})`;
     db.promise(insertUserId, (err, result) => {
       if (err) throw err;
     }).then((result) => {
@@ -304,7 +305,7 @@ app.delete("/delete/medicalStaff", (req, res) => {
         if (err) {
           throw err;
         }
-        // console.log("instered");
+        console.log("delete success 308");
         res.send("instered");
       };
   });

@@ -20,7 +20,18 @@ function PatientList() {
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
 
+  const addCountRequest = (apiAddress) => {
+    console.log(localStorage.getItem("email"));
+    Axios.post("http://localhost:8001/addCountRequest", {
+      apiAddress: apiAddress,
+      userEmail: localStorage.getItem("email"),
+    }).then((response) => {
+      console.log(response);
+    });
+  };
+
   const getPatient = () => {
+    addCountRequest("patientList");
     Axios.get("http://localhost:8001/patientList").then((response) => {
       setPatientList(response.data);
     });
@@ -37,6 +48,7 @@ function PatientList() {
     ) {
       alert("Please fill in!");
     } else {
+      addCountRequest("createPatient");
       Axios.post("http://localhost:8001/createPatient", {
         name: name,
         city: city,
@@ -72,6 +84,7 @@ function PatientList() {
     ) {
       alert("Please fill in!");
     } else {
+      addCountRequest("updatePatient");
       Axios.put("http://localhost:8001/updatePatient/", {
         name: newName,
         city: newCity,
@@ -103,13 +116,16 @@ function PatientList() {
 
   const removePatient = (ID) => {
     console.log(ID);
-    Axios.delete(`http://localhost:8001/deletePatient/${ID}`).then((response) => {
-      setPatientList(
-        patientList.filter((val) => {
-          return val.ID !== ID;
-        })
-      );
-    });
+    addCountRequest("deletePatient");
+    Axios.delete(`http://localhost:8001/deletePatient/${ID}`).then(
+      (response) => {
+        setPatientList(
+          patientList.filter((val) => {
+            return val.ID !== ID;
+          })
+        );
+      }
+    );
   };
 
   return (

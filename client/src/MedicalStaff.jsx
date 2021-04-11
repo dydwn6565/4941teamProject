@@ -18,7 +18,7 @@ function MedicalStaff() {
   const [selectedPatient, setselectedPatient] = useState("");
   const [patientID, setPatientId] = useState("");
   const [patientState, setPatientState] = useState("");
-  const [userEmail, setUserEmail] = useState("");
+  // const [userEmail, setUserEmail] = useState("");
   useEffect(() => {
     const getPatient = () => {
       Axios.get("http://localhost:8001/patientList").then((response) => {
@@ -28,40 +28,41 @@ function MedicalStaff() {
     };
     getPatient();
     GetMedicalStaff();
-    getUserEmail();
+    // getUserEmail();
+    // insertUserId();
   }, []);
 
-  const getUserEmail = () => {
-    // console.log(localStorage.getItem("token"));
+  // const getUserEmail = () => {
+  //   // console.log(localStorage.getItem("token"));
 
-    Axios.get("http://localhost:8001/authUser", {
-      headers: {
-        "x-access-token": localStorage.getItem("token"),
-      },
-    }).then((response) => {
-      console.log(response.data);
-      setUserEmail(response.data);
-    });
-  };
+  //   Axios.get("http://localhost:8001/authUser", {
+  //     headers: {
+  //       "x-access-token": localStorage.getItem("token"),
+  //     },
+  //   }).then((response) => {
+  //     console.log(response.data);
+  //     setUserEmail(response.data);
+  //   });
+  // };
 
   const addCountRequest = (apiAddress) => {
-    // console.log(userEmail)
+    console.log(localStorage.getItem("email"));
     Axios.post("http://localhost:8001/addCountRequest", {
       apiAddress: apiAddress,
-      userEmail: userEmail,
+      userEmail: localStorage.getItem("email"),
     }).then((response) => {
       console.log(response);
     });
   };
 
-  const insertUserId = () => {
-    // console.log(userEmail)
-    Axios.post("http://localhost:8001/insertUserId", {
-      userEmail: userEmail,
-    }).then((response) => {
-      console.log(response);
-    });
-  };
+  // const insertUserId = () => {
+  //   // console.log(userEmail)
+  //   Axios.post("http://localhost:8001/insertUserId", {
+  //     userEmail: localStorage.getItem("email"),
+  //   }).then((response) => {
+  //     console.log(response);
+  //   });
+  // };
 
   const RegisterRequest = () => {
     console.log(startTime.split(" ")[1]);
@@ -81,7 +82,7 @@ function MedicalStaff() {
     } else if (patientState === 1) {
       alert("This patient already has been scheduled  ");
     } else {
-      // addCountRequest("register");
+      addCountRequest("updateReserved");
       Axios.put("http://localhost:8001/updateReserved", {
         patientID: patientID,
         name: name,
@@ -92,6 +93,7 @@ function MedicalStaff() {
       }).then((response) => {
         // console.log(response);
         // console.log("line55");
+        addCountRequest("postMedicalStaff");
         Axios.post("http://localhost:8001/post/medicalStaff", {
           name: name,
           position: position,
@@ -116,6 +118,7 @@ function MedicalStaff() {
     } else if (patientState === 1) {
       alert("This patient already has been scheduled  ");
     } else {
+      addCountRequest("putMedicalStaff");
       Axios.put("http://localhost:8001/put/medicalStaff", {
         name: name,
         position: position,
@@ -141,6 +144,7 @@ function MedicalStaff() {
       // endTime: endTime,
       // patientID: patientID,
     }).then((response) => {
+      addCountRequest("getMedicalStaff");
       // console.log(response.data);
       // console.log(response.data[0].start_at);
       setList(response.data);
@@ -149,13 +153,13 @@ function MedicalStaff() {
 
   const DeleteMedicalStaff = (patientID, updateNum) => {
     // console.log("line107");
-
+    addCountRequest("updateNotReserved");
     Axios.put("http://localhost:8001/updateNotReserved", {
       patientID: patientID,
     }).then((response) => {
       // console.log(response);
       // console.log("line 108 delete");
-
+      addCountRequest("deletePati");
       Axios.delete("http://localhost:8001/delete/medicalStaff", {
         data: {
           updateNum: updateNum,
@@ -273,7 +277,7 @@ function MedicalStaff() {
               <br />
               <br />
               <div className="d-flex justify-content-center">
-                <Button
+                {/* <Button
                   className="btn btn-success btn-sm mr-3"
                   onClick={() => {
                     addCountRequest("postMedicalStaff");
@@ -286,7 +290,7 @@ function MedicalStaff() {
                   onClick={insertUserId}
                 >
                   createadmin
-                </Button>
+                </Button> */}
 
                 <Button
                   className="btn btn-success btn-sm mr-3"
