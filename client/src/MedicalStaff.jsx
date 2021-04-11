@@ -12,13 +12,13 @@ function MedicalStaff() {
   const [startTime, setStartTime] = useState("");
   const [endDate, setEndDate] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [updateNum, setUpdateNum] = useState("");
+  // const [updateNum, setUpdateNum] = useState("");
   const [list, setList] = useState([]);
   const [patientList, setPatientList] = useState([]);
   const [selectedPatient, setselectedPatient] = useState("");
   const [patientID, setPatientId] = useState("");
   const [patientState, setPatientState] = useState("");
-
+  const [userEmail, setUserEmail] = useState("");
   useEffect(() => {
     const getPatient = () => {
       Axios.get("http://localhost:8001/patientList").then((response) => {
@@ -27,18 +27,60 @@ function MedicalStaff() {
       });
     };
     getPatient();
+    GetMedicalStaff();
+    getUserEmail();
   }, []);
+
+  const getUserEmail = () => {
+    // console.log(localStorage.getItem("token"));
+
+    Axios.get("http://localhost:8001/authUser", {
+      headers: {
+        "x-access-token": localStorage.getItem("token"),
+      },
+    }).then((response) => {
+      console.log(response.data);
+      setUserEmail(response.data);
+    });
+  };
+
+  const addCountRequest = (apiAddress) => {
+    // console.log(userEmail)
+    Axios.post("http://localhost:8001/addCountRequest", {
+      apiAddress: apiAddress,
+    }).then((response) => {
+      console.log(response);
+    });
+  };
+
+  const insertUserId = () => {
+    // console.log(userEmail)
+    Axios.post("http://localhost:8001/insertUserId", {
+      userEmail: userEmail,
+    }).then((response) => {
+      console.log(response);
+    });
+  };
 
   const RegisterRequest = () => {
     console.log(startTime.split(" ")[1]);
     console.log(endDate + " " + endTime);
-    if (name === "" || position === "" || endDate === "" || endTime === "") {
+
+    if (
+      name === "" ||
+      position === "" ||
+      startTime === "" ||
+      endDate === "" ||
+      endTime === "" ||
+      selectedPatient === ""
+    ) {
       alert("please type empty section");
     } else if (startTime > endDate + " " + endTime) {
       alert("Your end time is forward than your start time");
     } else if (patientState === 1) {
       alert("This patient already has been scheduled  ");
     } else {
+      addCountRequest("register");
       Axios.put("http://localhost:8001/updateReserved", {
         patientID: patientID,
         name: name,
@@ -47,12 +89,11 @@ function MedicalStaff() {
         endDate: endDate,
         endTime: endTime,
       }).then((response) => {
-        console.log(response);
-        console.log("line55");
+        // console.log(response);
+        // console.log("line55");
         Axios.post("http://localhost:8001/post/medicalStaff", {
           name: name,
           position: position,
-
           startTime: startTime,
           endDate: endDate,
           endTime: endTime,
@@ -60,14 +101,13 @@ function MedicalStaff() {
         }).then((response) => {
           console.log(response);
         });
+        window.location.reload(false);
       });
-
-      window.location.reload(false);
-      GetMedicalStaff();
     }
   };
 
-  const UpdateMedicalStaff = () => {
+  const UpdateMedicalStaff = (Id, startDate, patientID) => {
+    // console.log(startDate);
     if (name === "" || position === "" || endDate === "" || endTime === "") {
       alert("please type empty section");
     } else if (startTime > endDate + " " + endTime) {
@@ -78,13 +118,14 @@ function MedicalStaff() {
       Axios.put("http://localhost:8001/put/medicalStaff", {
         name: name,
         position: position,
-        startTime: startTime,
+        startTime: startDate,
         endDate: endDate,
         endTime: endTime,
-        updateNum: updateNum,
+        updateNum: Id,
         patientID: patientID,
       }).then((response) => {
-        console.log(response);
+        window.location.reload(false);
+        // console.log(response);
       });
       // GetMedicalStaff()
     }
@@ -92,35 +133,36 @@ function MedicalStaff() {
 
   const GetMedicalStaff = () => {
     Axios.get("http://localhost:8001/get/medicalStaff", {
-      name: name,
-      position: position,
-      startTime: startTime,
-      endDate: endDate,
-      endTime: endTime,
-      patientID: patientID,
+      // name: name,
+      // position: position,
+      // startTime: startTime,
+      // endDate: endDate,
+      // endTime: endTime,
+      // patientID: patientID,
     }).then((response) => {
-      console.log(response.data);
-      console.log(response.data[0].start_at);
+      // console.log(response.data);
+      // console.log(response.data[0].start_at);
       setList(response.data);
     });
   };
 
-  const DeleteMedicalStaff = () => {
-    console.log("line107");
+  const DeleteMedicalStaff = (patientID, updateNum) => {
+    // console.log("line107");
 
     Axios.put("http://localhost:8001/updateNotReserved", {
       patientID: patientID,
     }).then((response) => {
-      console.log(response);
-      console.log("line 108 delete");
+      // console.log(response);
+      // console.log("line 108 delete");
 
       Axios.delete("http://localhost:8001/delete/medicalStaff", {
         data: {
           updateNum: updateNum,
         },
       }).then((response) => {
-        console.log(response);
+        // console.log(response);
       });
+      window.location.reload(false);
     });
   };
 
@@ -166,12 +208,18 @@ function MedicalStaff() {
                     <Dropdown>
                       <span>Select patient: </span>
 
-                      <Dropdown.Toggle variant="success btn-sm" id="dropdown-basic">
+                      <Dropdown.Toggle
+                        variant="success btn-sm"
+                        id="dropdown-basic"
+                      >
                         Patient Id
                       </Dropdown.Toggle>
                       <br />
 
-                      <Dropdown.Menu variant="secondary btn-sm" id="dropdown-basic">
+                      <Dropdown.Menu
+                        variant="secondary btn-sm"
+                        id="dropdown-basic"
+                      >
                         {patientList &&
                           patientList.map((patient, index) => (
                             <Dropdown.Item
@@ -218,34 +266,36 @@ function MedicalStaff() {
                       }}
                     />
                   </div>
-
-                  <div className="form-group col-md-6">
-                    <label htmlFor="inputName4">Update Number:</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      onChange={(e) => {
-                        setUpdateNum(e.target.value);
-                      }}
-                    />
-                  </div>
                 </div>
               </form>
 
               <br />
               <br />
               <div className="d-flex justify-content-center">
-                <Button className="btn btn-success btn-sm mr-3" onClick={GetMedicalStaff}>
+                <Button
+                  className="btn btn-success btn-sm mr-3"
+                  onClick={addCountRequest}
+                >
+                  AddCount
+                </Button>
+                <Button
+                  className="btn btn-success btn-sm mr-3"
+                  onClick={insertUserId}
+                >
+                  createadmin
+                </Button>
+
+                <Button
+                  className="btn btn-success btn-sm mr-3"
+                  onClick={GetMedicalStaff}
+                >
                   View Schedule
                 </Button>
-                <Button className="btn btn-primary btn-sm mr-3" onClick={RegisterRequest}>
+                <Button
+                  className="btn btn-primary btn-sm mr-3"
+                  onClick={RegisterRequest}
+                >
                   Add Schedule
-                </Button>
-                <Button className="btn btn-secondary btn-sm mr-3" onClick={UpdateMedicalStaff}>
-                  Update Schedule
-                </Button>
-                <Button className="btn btn-info btn-sm mr-3" onClick={DeleteMedicalStaff}>
-                  Delete Schedule
                 </Button>
               </div>
             </div>
@@ -271,6 +321,7 @@ function MedicalStaff() {
                       Ed Date
                     </th>
                     <th scope="col"># Patient</th>
+                    <th></th>
                   </tr>
                 </thead>
 
@@ -283,7 +334,28 @@ function MedicalStaff() {
                         <td>{li.position}</td>
                         <td>{li.start_at}</td>
                         <td>{li.end_at}</td>
+
                         <td style={{ textAlign: "center" }}>{li.patientID}</td>
+                        <Button
+                          className="btn btn-secondary btn-sm mr-3"
+                          onClick={() => {
+                            UpdateMedicalStaff(
+                              li.Id,
+                              li.start_at,
+                              li.patientID
+                            );
+                          }}
+                        >
+                          Update
+                        </Button>
+                        <Button
+                          className="btn btn-info btn-sm mr-3"
+                          onClick={() => {
+                            DeleteMedicalStaff(li.patientID, li.Id);
+                          }}
+                        >
+                          Delete
+                        </Button>
                       </tr>
                     </>
                   ))}

@@ -33,8 +33,8 @@ app.use(
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "0505",
-  database: "project",
+  password: "",
+  database: "4537db",
 });
 
 db.promise = (sql) => {
@@ -56,14 +56,35 @@ app.post("/register", (req, res) => {
     if (err) {
       console.log(err);
     }
-    db.query("INSERT INTO users (email, password) VALUES (?, ?)", [email, hash], (err, result) => {
-      console.log(err);
-    });
+    db.query(
+      "INSERT INTO users (email, password) VALUES (?, ?)",
+      [email, hash],
+      (err, result) => {
+        console.log(err);
+      }
+    );
   });
 });
 
-const verifyJWT = (req, res, next) => {
+// const verifyJWT = (req, res, next) => {
+//   const token = req.headers["x-access-token"];
+//   if (!token) {
+//     res.send("No token");
+//   } else {
+//     jwt.verify(token, "jwtSecret", (err, decoded) => {
+//       if (err) {
+//         res.json({ auth: false, message: "Failed to authenticate.." });
+//       } else {
+//         req.userID = decoded.id;
+//         next();
+//       }
+//     });
+//   }
+// };
+
+app.get("/authUser", (req, res) => {
   const token = req.headers["x-access-token"];
+  // console.log(token);
   if (!token) {
     res.send("No token");
   } else {
@@ -72,14 +93,11 @@ const verifyJWT = (req, res, next) => {
         res.json({ auth: false, message: "Failed to authenticate.." });
       } else {
         req.userID = decoded.id;
-        next();
+        // console.log(decoded.email);
+        res.send(decoded.email);
       }
     });
   }
-};
-
-app.get("/authUser", verifyJWT, (req, res) => {
-  res.send("Authenticated!");
 });
 
 app.get("/login", (req, res) => {
@@ -93,22 +111,24 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  console.log("line89" + password);
+  // console.log("line89" + password);
   db.query("SELECT * FROM users WHERE email = ?;", email, (err, result) => {
     if (err) {
       res.send({ err: err });
     }
     if (result.length > 0) {
-      console.log("line96");
-      console.log(result[0].password);
+      // console.log("line96");
+      // console.log(result[0].password);
       bcrypt.compare(password, result[0].password, (error, response) => {
-        console.log("line98");
-        console.log(response);
+        // console.log("line98");
+        // console.log(response);
         if (response) {
-          console.log("line100");
+          // console.log("line100");
           req.session.user = result;
-          const id = result[0].id;
-          const token = jwt.sign({ id }, "jwtSecret", {
+          const email = result[0].email;
+          // console.log(id);
+          // console.log(result[0].email);
+          const token = jwt.sign({ email }, "jwtSecret", {
             expiresIn: 300, //5mins
           });
           req.session.user = result;
@@ -123,8 +143,52 @@ app.post("/login", (req, res) => {
   });
 });
 
+app.post("/addCountRequest", (req, res) => {
+  let apiAddress = req.body.address;
+  console.log(req.body.userEmail);
+  res.send("hi");
+  let getUserId = `SELECT userID from users where email= "${req.body.userEmail}"`;
+
+  db.promise(getUserId, (err, result) => {
+    if (err) throw err;
+  }).then((result) => {
+    console.log("line153");
+    console.log(result[0].userID);
+    // console.log(result[0]["userId"]);
+    let insertCountToAdmin = `insert admin(${apiAddress} values(${
+      apiAddress + 1
+    }) where userID=${result[0].userID}`;
+    db.promise(insertCountToAdmin, (err, result) => {
+      if (err) throw err;
+    }).then((result) => {
+      res.send("success");
+    });
+  });
+});
+
+app.post("/insertUserId", (req, res) => {
+  // let apiAddress = req.body.address;
+  console.log(req.body.userEmail);
+
+  let getUserId = `SELECT userID from users where email= "${req.body.userEmail}"`;
+
+  db.promise(getUserId, (err, result) => {
+    if (err) throw err;
+  }).then((result) => {
+    console.log("line176");
+    console.log(result[0].userID);
+    // console.log(result[0]["userId"]);
+    let insertUserId = `insert admin(userID) values(${result[0].userID})`;
+    db.promise(insertUserId, (err, result) => {
+      if (err) throw err;
+    }).then((result) => {
+      res.send("success");
+    });
+  });
+});
+
 app.post("/post/medicalStaff", (req, res) => {
-  console.log(req.body);
+  // console.log(req.body);
   let checkDupStart = `Select count(*) from medicalstaff where (name="${
     req.body.name
   }" and position="${req.body.position}" and  "${
@@ -133,17 +197,18 @@ app.post("/post/medicalStaff", (req, res) => {
     req.body.position
   }" and  "${
     req.body.endDate + " " + req.body.endTime
-  }" Between start_at And end_at) or  (name = "${req.body.name}" and position="${
-    req.body.position
-  }" and  start_at Between "${req.body.startTime}" and "${
-    req.body.endDate + " " + req.body.endTime
-  }") `;
+  }" Between start_at And end_at) or  (name = "${
+    req.body.name
+  }" and position="${req.body.position}" and  start_at Between "${
+    req.body.startTime
+  }" and "${req.body.endDate + " " + req.body.endTime}") `;
 
   let inSertMedicalStaff = `INSERT INTO medicalstaff(name,position,start_at,end_at,patientID) values("${
     req.body.name
   }","${req.body.position}","${req.body.startTime}","${
     req.body.endDate + " " + req.body.endTime
   }",${req.body.patientID})`;
+
   db.promise(checkDupStart, (err, result) => {
     if (err) {
       throw err;
@@ -157,7 +222,7 @@ app.post("/post/medicalStaff", (req, res) => {
           if (err) {
             throw err;
           }
-          console.log("instered");
+          // console.log("instered");
           res.send("instered");
         };
     }
@@ -173,6 +238,7 @@ app.get("/get/medicalStaff", (req, res) => {
 });
 
 app.put("/put/medicalStaff", (req, res) => {
+  // console.log(req.body);
   let checkDupStart = `Select count(*) from medicalstaff where (name = "${
     req.body.name
   }" and position="${req.body.position}" and "${
@@ -181,24 +247,26 @@ app.put("/put/medicalStaff", (req, res) => {
     req.body.position
   }" and  "${
     req.body.endDate + " " + req.body.endTime
-  }" Between start_at and end_at) or  (name = "${req.body.name}" and position="${
-    req.body.position
-  }" and  start_at Between "${req.body.startDate + " " + req.body.startTime}" and "${
-    req.body.endDate + " " + req.body.endTime
-  }") `;
+  }" Between start_at and end_at) or  (name = "${
+    req.body.name
+  }" and position="${req.body.position}" and  start_at Between "${
+    req.body.startDate + " " + req.body.startTime
+  }" and "${req.body.endDate + " " + req.body.endTime}") `;
 
   db.promise(checkDupStart, (err, result) => {
     if (err) {
       throw err;
     }
   }).then((result) => {
-    let updateMedicalStaff = `UPDATE  medicalstaff set name = "${req.body.name}", position ="${
-      req.body.position
-    }",start_at = "${req.body.startDate + " " + req.body.startTime}",end_at="${
+    let updateMedicalStaff = `UPDATE  medicalstaff set name = "${
+      req.body.name
+    }", position ="${req.body.position}",start_at = "${
+      req.body.startTime
+    }",end_at="${
       req.body.endDate + " " + req.body.endTime
     }" where Id =${parseInt(req.body.updateNum)}`;
 
-    console.log(result);
+    // console.log(result);
     if (result[0]["count(*)"] > 0) {
       res.send("can not set this time");
     } else {
@@ -207,7 +275,7 @@ app.put("/put/medicalStaff", (req, res) => {
           if (err) {
             throw err;
           }
-          console.log("instered");
+          // console.log("instered");
           res.send("instered");
         };
     }
@@ -215,7 +283,7 @@ app.put("/put/medicalStaff", (req, res) => {
 });
 
 app.delete("/delete/medicalStaff", (req, res) => {
-  console.log(req.body.updateNum);
+  // console.log(req.body.updateNum);
   let reSetNum = "ALTER TABLE medicalstaff AUTO_INCREMENT =1";
   let deleRow = `DELETE FROM medicalstaff where id=${req.body.updateNum}`;
 
@@ -224,13 +292,13 @@ app.delete("/delete/medicalStaff", (req, res) => {
       throw err;
     }
   }).then((result) => {
-    console.log("inside delete");
+    // console.log("inside delete");
     db.query(reSetNum),
       (err, result) => {
         if (err) {
           throw err;
         }
-        console.log("instered");
+        // console.log("instered");
         res.send("instered");
       };
   });
@@ -304,27 +372,35 @@ app.delete("/deletePatient/:ID", (req, res) => {
 
 app.put("/updateReserved", (req, res) => {
   const patientID = req.body.patientID;
-  console.log("line 336" + patientID);
-  db.query("UPDATE patient SET reservedState = 1 WHERE ID = ?", [patientID], (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
+  // console.log("line 336" + patientID);
+  db.query(
+    "UPDATE patient SET reservedState = 1 WHERE ID = ?",
+    [patientID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
     }
-  });
+  );
 });
 
 app.put("/updateNotReserved", (req, res) => {
   const patientID = req.body.patientID;
-  console.log("line330");
-  console.log("line 330 " + patientID);
-  db.query("UPDATE patient SET reservedState = 0 WHERE ID = ?", [patientID], (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
+  // console.log("line330");
+  // console.log("line 330 " + patientID);
+  db.query(
+    "UPDATE patient SET reservedState = 0 WHERE ID = ?",
+    [patientID],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
     }
-  });
+  );
 });
 app.listen(8001, (req, res) => {
   console.log("Server running...");

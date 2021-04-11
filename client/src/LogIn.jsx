@@ -19,8 +19,15 @@ function LogIn() {
         email: userEmail,
         password: userPassword,
       }).then((response) => {
+        console.log(response);
+        console.log(response.message);
+        // if (response) {
+        // alert("This is invaild input");
         localStorage.setItem("token", response.data.token);
         history.push("/");
+        // } else {
+
+        // }
       });
     }
   };
