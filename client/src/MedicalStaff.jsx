@@ -48,6 +48,7 @@ function MedicalStaff() {
     // console.log(userEmail)
     Axios.post("http://localhost:8001/addCountRequest", {
       apiAddress: apiAddress,
+      userEmail: userEmail,
     }).then((response) => {
       console.log(response);
     });
@@ -80,7 +81,7 @@ function MedicalStaff() {
     } else if (patientState === 1) {
       alert("This patient already has been scheduled  ");
     } else {
-      addCountRequest("register");
+      // addCountRequest("register");
       Axios.put("http://localhost:8001/updateReserved", {
         patientID: patientID,
         name: name,
@@ -274,7 +275,9 @@ function MedicalStaff() {
               <div className="d-flex justify-content-center">
                 <Button
                   className="btn btn-success btn-sm mr-3"
-                  onClick={addCountRequest}
+                  onClick={() => {
+                    addCountRequest("postMedicalStaff");
+                  }}
                 >
                   AddCount
                 </Button>

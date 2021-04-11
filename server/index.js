@@ -144,23 +144,29 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/addCountRequest", (req, res) => {
-  let apiAddress = req.body.address;
-  console.log(req.body.userEmail);
-  res.send("hi");
+  let apiAddress = req.body.apiAddress;
+  console.log(apiAddress);
+
   let getUserId = `SELECT userID from users where email= "${req.body.userEmail}"`;
 
   db.promise(getUserId, (err, result) => {
     if (err) throw err;
   }).then((result) => {
-    console.log("line153");
+    console.log("line156");
     console.log(result[0].userID);
-    // console.log(result[0]["userId"]);
-    let insertCountToAdmin = `insert admin(${apiAddress} values(${
-      apiAddress + 1
-    }) where userID=${result[0].userID}`;
+
+    // let insertCountToAdmin = `insert admin(${apiAddress} values(${
+    //   apiAddress + 1
+    // }) where userID=${result[0].userID}`;
+    // let insertCountToAdmin = `update admin set "${apiAddress}" = ${(apiAddress =
+    //   apiAddress + 1)}} where userID=${result[0].userID}`;
+
+    // let insertCountToAdmin = `update admin set postMedicalStaff = 1 where userID=${result[0].userID}`;
+    let insertCountToAdmin = `update admin set ${apiAddress} = ${apiAddress}+1 where userID=${result[0].userID}`;
     db.promise(insertCountToAdmin, (err, result) => {
       if (err) throw err;
     }).then((result) => {
+      console.log("success");
       res.send("success");
     });
   });
