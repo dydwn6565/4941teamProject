@@ -19,9 +19,11 @@ function MedicalStaff() {
   const [patientID, setPatientId] = useState("");
   const [patientState, setPatientState] = useState("");
   // const [userEmail, setUserEmail] = useState("");
+
+  let endPoint = "https://heejaerica.online/4537/termproject/API/V1/";
   useEffect(() => {
     const getPatient = () => {
-      Axios.get("http://localhost:8001/patientList").then((response) => {
+      Axios.get(endPoint + "patientList/").then((response) => {
         setPatientList(response.data);
         console.log(response.data);
       });
@@ -47,7 +49,7 @@ function MedicalStaff() {
 
   const addCountRequest = (apiAddress) => {
     console.log(localStorage.getItem("email"));
-    Axios.post("http://localhost:8001/addCountRequest", {
+    Axios.post(endPoint + "addCountRequest/", {
       apiAddress: apiAddress,
       userEmail: localStorage.getItem("email"),
     }).then((response) => {
@@ -83,7 +85,7 @@ function MedicalStaff() {
       alert("This patient already has been scheduled  ");
     } else {
       addCountRequest("updateReserved");
-      Axios.put("http://localhost:8001/updateReserved", {
+      Axios.put(endPoint + "updateReserved/", {
         patientID: patientID,
         name: name,
         position: position,
@@ -94,7 +96,7 @@ function MedicalStaff() {
         // console.log(response);
         // console.log("line55");
         addCountRequest("postMedicalStaff");
-        Axios.post("http://localhost:8001/post/medicalStaff", {
+        Axios.post(endPoint + "post/medicalStaff/", {
           name: name,
           position: position,
           startTime: startTime,
@@ -119,7 +121,7 @@ function MedicalStaff() {
       alert("This patient already has been scheduled  ");
     } else {
       addCountRequest("putMedicalStaff");
-      Axios.put("http://localhost:8001/put/medicalStaff", {
+      Axios.put(endPoint + "put/medicalStaff/", {
         name: name,
         position: position,
         startTime: startDate,
@@ -128,15 +130,15 @@ function MedicalStaff() {
         updateNum: Id,
         patientID: patientID,
       }).then((response) => {
-        window.location.reload(false);
-        // console.log(response);
+        console.log(response);
+        // window.location.reload(false);
       });
       // GetMedicalStaff()
     }
   };
 
   const GetMedicalStaff = () => {
-    Axios.get("http://localhost:8001/get/medicalStaff", {
+    Axios.get(endPoint + "get/medicalStaff/", {
       // name: name,
       // position: position,
       // startTime: startTime,
@@ -154,20 +156,20 @@ function MedicalStaff() {
   const DeleteMedicalStaff = (patientID, updateNum) => {
     // console.log("line107");
     addCountRequest("updateNotReserved");
-    Axios.put("http://localhost:8001/updateNotReserved", {
+    Axios.put(endPoint + "updateNotReserved/", {
       patientID: patientID,
     }).then((response) => {
       // console.log(response);
       // console.log("line 108 delete");
       addCountRequest("deletePati");
-      Axios.delete("http://localhost:8001/delete/medicalStaff", {
+      Axios.delete(endPoint + "delete/medicalStaff/", {
         data: {
           updateNum: updateNum,
         },
       }).then((response) => {
-        // console.log(response);
+        console.log(response);
+        // window.location.reload(false);
       });
-      window.location.reload(false);
     });
   };
 

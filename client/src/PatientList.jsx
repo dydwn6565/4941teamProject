@@ -20,9 +20,10 @@ function PatientList() {
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
 
+  let endPoint = "https://heejaerica.online/4537/termproject/API/V1/";
   const addCountRequest = (apiAddress) => {
     console.log(localStorage.getItem("email"));
-    Axios.post("http://localhost:8001/addCountRequest", {
+    Axios.post(endPoint + "addCountRequest", {
       apiAddress: apiAddress,
       userEmail: localStorage.getItem("email"),
     }).then((response) => {
@@ -32,7 +33,7 @@ function PatientList() {
 
   const getPatient = () => {
     addCountRequest("patientList");
-    Axios.get("http://localhost:8001/patientList").then((response) => {
+    Axios.get(endPoint + "patientList").then((response) => {
       setPatientList(response.data);
     });
   };
@@ -49,7 +50,7 @@ function PatientList() {
       alert("Please fill in!");
     } else {
       addCountRequest("createPatient");
-      Axios.post("http://localhost:8001/createPatient", {
+      Axios.post(endPoint + "createPatient", {
         name: name,
         city: city,
         mobile: mobile,
@@ -69,7 +70,7 @@ function PatientList() {
           },
         ]);
       });
-      window.location.reload(false);
+      // window.location.reload(false);
     }
   };
 
@@ -85,7 +86,7 @@ function PatientList() {
       alert("Please fill in!");
     } else {
       addCountRequest("updatePatient");
-      Axios.put("http://localhost:8001/updatePatient/", {
+      Axios.put(endPoint + "updatePatient/", {
         name: newName,
         city: newCity,
         mobile: newMobile,
@@ -110,6 +111,7 @@ function PatientList() {
               : val;
           })
         );
+        // window.location.reload(false);
       });
     }
   };
@@ -117,15 +119,13 @@ function PatientList() {
   const removePatient = (ID) => {
     console.log(ID);
     addCountRequest("deletePatient");
-    Axios.delete(`http://localhost:8001/deletePatient/${ID}`).then(
-      (response) => {
-        setPatientList(
-          patientList.filter((val) => {
-            return val.ID !== ID;
-          })
-        );
-      }
-    );
+    Axios.delete(endPoint + `deletePatient/${ID}`).then((response) => {
+      setPatientList(
+        patientList.filter((val) => {
+          return val.ID !== ID;
+        })
+      );
+    });
   };
 
   return (
