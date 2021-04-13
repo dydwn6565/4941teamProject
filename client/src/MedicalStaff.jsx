@@ -20,7 +20,7 @@ function MedicalStaff() {
   const [patientState, setPatientState] = useState("");
   // const [userEmail, setUserEmail] = useState("");
 
-  let endPoint = "https://heejaerica.online/4537/termproject/API/V1/";
+  let endPoint = "https://localhost:3000/";
   useEffect(() => {
     const getPatient = () => {
       Axios.get(endPoint + "patientList/").then((response) => {
