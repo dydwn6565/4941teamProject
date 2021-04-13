@@ -232,7 +232,7 @@ app.post("/post/medicalStaff", (req, res) => {
             throw err;
           }
           // console.log("instered");
-          res.send("instered");
+          res.send("inserted");
         };
     }
   });
@@ -285,7 +285,7 @@ app.put("/put/medicalStaff", (req, res) => {
             throw err;
           }
           // console.log("instered");
-          res.send("instered");
+          res.send("inserted");
         };
     }
   });
@@ -293,8 +293,8 @@ app.put("/put/medicalStaff", (req, res) => {
 
 app.delete("/delete/medicalStaff", (req, res) => {
   // console.log(req.body.updateNum);
-  let reSetNum = "ALTER TABLE medicalstaff AUTO_INCREMENT =1";
-  let deleRow = `DELETE FROM medicalstaff where id=${req.body.updateNum}`;
+  let reSetNum = "ALTER TABLE medicalStaff AUTO_INCREMENT =1";
+  let deleRow = `DELETE FROM medicalStaff where id=${req.body.updateNum}`;
 
   db.promise(deleRow, (err, result) => {
     if (err) {
@@ -308,7 +308,7 @@ app.delete("/delete/medicalStaff", (req, res) => {
           throw err;
         }
         console.log("delete success 308");
-        res.send("instered");
+        res.send("inserted");
       };
   });
 });

@@ -181,7 +181,7 @@ function MedicalStaff() {
           <div className="d-flex justify-content-center p-3">
             <h3>Create Schedule</h3>
           </div>
-          <div className="row">
+          <div className="row" style={{ marginTop: "-60px" }}>
             <div className="column"></div>
             <div className="column ">
               <div className="d-flex justify-content-center">
@@ -240,8 +240,8 @@ function MedicalStaff() {
                                     setPatientState(patient.reservedState);
                                   }}
                                 >
-                                  {" "}
-                                  Patient#: {patient.ID}
+                                  {console.log(patient)}
+                                  Patient Name: {patient.name}
                                   <span>
                                     {patient.reservedState === 1 ? (
                                       <p>Reserved</p>
@@ -311,13 +311,15 @@ function MedicalStaff() {
               </p>
               <p>1. Please fill up empty sections </p>
               <p>2. Press Update button(grey colour button) </p>
-              <p>Delete Schedule: </p>
+              <p>
+                <b>Delete Schedule:</b>{" "}
+              </p>
               <p>Press Delete button(light blue colour button) </p>
             </div>
             <div className="column"></div>
           </div>
 
-          <div className="d-flex justify-content-center p-5">
+          <div className="d-flex justify-content-center">
             <div className="schedule">
               <div>{list.position}</div>
               <div className="d-flex justify-content-center">
@@ -351,7 +353,6 @@ function MedicalStaff() {
                         <td>{li.position}</td>
                         <td>{li.start_at}</td>
                         <td>{li.end_at}</td>
-
                         <td style={{ textAlign: "center" }}>{li.patientID}</td>
                         <Button
                           className="btn btn-secondary btn-sm mr-3"
