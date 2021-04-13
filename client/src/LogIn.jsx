@@ -10,7 +10,7 @@ function LogIn() {
   const [userPassword, setUserPassword] = useState("");
   const history = useHistory();
 
-  let endPoint = "https://localhost:3000/";
+  let endPoint = "http://localhost:8001/";
   const logInRequest = (e) => {
     e.preventDefault();
     if (userEmail === "" || userPassword === "") {

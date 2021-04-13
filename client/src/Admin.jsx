@@ -18,7 +18,7 @@ function Admin() {
   useEffect(() => {
     const getTotalServerRequest = () => {
       Axios.get(
-        "https://localhost:3000/totalServerRequest/" +
+        "http://localhost:8001/totalServerRequest/" +
           localStorage.getItem("email"),
         {}
       ).then((response) => {

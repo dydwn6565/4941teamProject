@@ -14,7 +14,7 @@ function Register() {
     if (email === "" || password === "") {
       alert("There is empty input box. Please fill in.");
     } else {
-      Axios.post("https://localhost:3000/register", {
+      Axios.post("http://localhost:8001/register", {
         email: email,
         password: password,
       }).then((response) => {

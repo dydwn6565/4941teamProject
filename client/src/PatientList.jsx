@@ -20,7 +20,7 @@ function PatientList() {
   const [newDate, setNewDate] = useState("");
   const [newTime, setNewTime] = useState("");
 
-  let endPoint = "https://localhost:3000/";
+  let endPoint = "http://localhost:8001/";
   const addCountRequest = (apiAddress) => {
     console.log(localStorage.getItem("email"));
     Axios.post(endPoint + "addCountRequest", {
